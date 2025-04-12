@@ -1,15 +1,17 @@
+import NavBar from "@/components/NavBar"
+import SideBar from "@/components/SideBar"
 
 const DashBoardLayout = ({ children }: {
     children: React.ReactNode
 }) => {
     return (
         <div className="relative h-full">
-            <div className="sidebar hidden h-full md:flex md:fixed md:w-72 bg-zinc-900">
-                <div>
-                    Hello , dewang
-                </div>
-            </div>
-            <main></main>
+            <SideBar />
+            <main className="md:pl-72">
+                <NavBar />
+                main
+                {children}
+            </main>
         </div>
     )
 }
