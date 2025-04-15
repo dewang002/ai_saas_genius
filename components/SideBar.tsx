@@ -3,6 +3,7 @@ import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, Video
 import { Montserrat } from 'next/font/google';
 import React from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation';
 
 const montserrat = Montserrat({ weight: "600", subsets: ['latin'] });
 
@@ -16,44 +17,45 @@ const routes = [
     {
         label: "Conversation",
         icon: MessageSquare,
-        href: "/dashboard",
+        href: "/conversation",
         color: 'text-violet-700'
     },
     {
         label: "Image Generation",
         icon: ImageIcon,
-        href: "/dashboard",
+        href: "/image-generation",
         color: 'text-pink-700'
     },
     {
         label: "Video Generation",
         icon: VideoIcon,
-        href: "/dashboard",
+        href: "/video-generation",
         color: 'text-orange-700'
     },
     {
         label: "Music Generation",
         icon: Music,
-        href: "/dashboard",
+        href: "/music-generation",
         color: 'text-emerald-500'
     },
     {
         label: "Code Generation",
         icon: Code,
-        href: "/dashboard",
+        href: "/code-generation",
         color: 'text-green-700'
     },
     {
         label: "Setting",
         icon: Settings,
-        href: "/dashboard",
+        href: "/setting",
         color: 'text-white'
     },
 ]
 
 const SideBar = () => {
+    const pathName = usePathname()
     return (
-        <div className={`${montserrat.className} p-4 sidebar flex gap-16 h-full flex-col md:inset-y-0 z-50 md:fixed md:w-72 bg-zinc-900`}>
+        <div className={`${montserrat.className} p-4 sidebar flex gap-16 h-full flex-col md:inset-y-0 md:fixed md:w-72 bg-zinc-900`}>
             <Link className='flex gap-4' href={'/dashboard'}>
                 <div className='h-10 object-contain'>
                     <img className='object-contain h-10' src='/logo.png' alt='logo' />
@@ -64,7 +66,7 @@ const SideBar = () => {
             </Link>
             <div className='flex flex-col gap-8'>
                 {routes.map(elem => (
-                    <Link key={elem.label} className='flex gap-4' href={elem.href}>
+                    <Link key={elem.label} className={`flex gap-4 ${pathName===elem.href ?'bg-zinc-600 text-white p-2 rounded':' '} `} href={elem.href}>
                         <elem.icon className={`h-6 w-6 ${elem.color}`} />
                         <h1 className='text-white'>{elem.label}</h1>
                     </Link>

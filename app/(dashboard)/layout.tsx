@@ -6,7 +6,7 @@ const DashBoardLayout = ({ children }: {
 }) => {
     return (
         <div className="relative h-full">
-            <div className="hidden md:block">
+            <div className="hidden md:flex">
                 <SideBar />
             </div>
             <main className="md:pl-72">
