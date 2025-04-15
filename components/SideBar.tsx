@@ -4,7 +4,7 @@ import { Montserrat } from 'next/font/google';
 import React from 'react'
 import Link from 'next/link'
 
-const montserrat = Montserrat({weight:"600" , subsets: ['latin'] });
+const montserrat = Montserrat({ weight: "600", subsets: ['latin'] });
 
 const routes = [
     {
@@ -53,7 +53,7 @@ const routes = [
 
 const SideBar = () => {
     return (
-        <div className={`${montserrat.className} p-4 sidebar hidden gap-16 h-full md:flex md:flex-col md:inset-y-0 z-50 md:fixed md:w-72 bg-zinc-900`}>
+        <div className={`${montserrat.className} p-4 sidebar flex gap-16 h-full flex-col md:inset-y-0 z-50 md:fixed md:w-72 bg-zinc-900`}>
             <Link className='flex gap-4' href={'/dashboard'}>
                 <div className='h-10 object-contain'>
                     <img className='object-contain h-10' src='/logo.png' alt='logo' />
@@ -63,17 +63,15 @@ const SideBar = () => {
                 </h1>
             </Link>
             <div className='flex flex-col gap-8'>
-                {
-                    routes.map(elem => (
-                        <Link className='flex gap-4' href={elem.href}>
-                            <elem.icon className={`h-6 w-6 ${elem.color}`} />
-                            <h1 className='text-white'>{elem.label}</h1>
-                        </Link>
-                    ))
-                }
+                {routes.map(elem => (
+                    <Link key={elem.label} className='flex gap-4' href={elem.href}>
+                        <elem.icon className={`h-6 w-6 ${elem.color}`} />
+                        <h1 className='text-white'>{elem.label}</h1>
+                    </Link>
+                ))}
             </div>
         </div>
     )
 }
 
-export default SideBar
+export default SideBar;

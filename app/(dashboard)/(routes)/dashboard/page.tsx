@@ -6,6 +6,7 @@ const Dashboard = () => {
   return (
     <div className=' flex items-center '>
       {/* <Button variant={"outline"}>click</Button> */}
+      dashboard page
     </div>
   )
 }

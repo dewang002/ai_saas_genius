@@ -6,10 +6,11 @@ const DashBoardLayout = ({ children }: {
 }) => {
     return (
         <div className="relative h-full">
+            <div className="hidden md:block">
             <SideBar />
+            </div>
             <main className="md:pl-72">
                 <NavBar />
-                main
                 {children}
             </main>
         </div>
