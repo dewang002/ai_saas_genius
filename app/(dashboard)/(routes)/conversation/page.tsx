@@ -45,7 +45,7 @@ const page = () => {
                 model: "gemini-2.0-flash",
                 contents: values.prompt,
             });
-
+            //@ts-ignore
             const newMessage = userPrompt.candidates[0].content.parts[0].text
 
             const res = await axios.post('/api/conversation', {
