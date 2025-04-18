@@ -61,7 +61,7 @@ const SideBar = () => {
                     <img className='object-contain h-10' src='/logo.png' alt='logo' />
                 </div>
                 <h1 className='text-lg font-bold text-white'>
-                    Genius
+                    Gin
                 </h1>
             </Link>
             <div className='flex flex-col gap-8'>

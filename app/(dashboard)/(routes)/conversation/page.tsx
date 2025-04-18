@@ -4,7 +4,7 @@ import Heading from '@/components/Heading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Divide, Loader, MessageSquare } from 'lucide-react'
+import { Divide, Loader, Loader2, MessageSquare } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constent'
@@ -51,7 +51,7 @@ const page = () => {
             const res = await axios.post('/api/conversation', {
                 message: newMessage
             })
-
+            console.log(res)
             setMessage((prev): any => [...prev, res.data])
             form.reset()
         } catch (err) {
@@ -60,8 +60,6 @@ const page = () => {
             router.refresh()
         }
     }
-
-    console.log(message)
 
     return (
         <div className='flex flex-col gap-4 px-8'>
@@ -80,6 +78,7 @@ const page = () => {
                                 <FormItem className='col-span-12 lg:col-span-10'>
                                     <FormControl>
                                         <Input
+                                        className="font-semibold"
                                             disabled={isLoading}
                                             placeholder='write here . . .'
                                             {...field}
@@ -102,7 +101,7 @@ const page = () => {
             </div>
 
             <div>
-                {isLoading && <div> <Loader className='animae-spin'/> thinking . . .</div> }
+                {isLoading && <div> <Loader2 className='animate-spin'/> thinking . . .</div> }
                 {message.length===0 && !isLoading &&(
                     <div>
                         <Empty />
