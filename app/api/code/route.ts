@@ -19,7 +19,7 @@ export const POST = async (req: Request) => {
         return NextResponse.json(message, { status: 200 })
 
     } catch (err) {
-        console.log("[conversation error]", err)
+        console.log("[code error]", err)
         return new NextResponse("internal error", { status: 500 })
     }
 }

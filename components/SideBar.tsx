@@ -41,7 +41,7 @@ const routes = [
     {
         label: "Code Generation",
         icon: Code,
-        href: "/code-generation",
+        href: "/code",
         color: 'text-green-700'
     },
     {
@@ -66,7 +66,7 @@ const SideBar = () => {
             </Link>
             <div className='flex flex-col gap-8'>
                 {routes.map(elem => (
-                    <Link key={elem.label} className={`flex gap-4 ${pathName===elem.href ?'bg-zinc-600 text-white p-2 rounded':' '} `} href={elem.href}>
+                    <Link key={elem.label} className={`flex gap-4 ${pathName === elem.href ? 'bg-zinc-600 text-white p-2 rounded' : ' '} `} href={elem.href}>
                         <elem.icon className={`h-6 w-6 ${elem.color}`} />
                         <h1 className='text-white'>{elem.label}</h1>
                     </Link>

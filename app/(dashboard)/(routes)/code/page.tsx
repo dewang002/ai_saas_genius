@@ -4,19 +4,20 @@ import Heading from '@/components/Heading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Divide, Loader, Loader2, MessageSquare } from 'lucide-react'
+import Empty from '@/components/Empty'
+import { Loader2, MessageSquare } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constent'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-
+import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { GoogleGenAI } from '@google/genai'
 import axios from 'axios'
-import Empty from '@/components/Empty'
+
 
 const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
 
@@ -32,7 +33,7 @@ const page = () => {
         }
     })
 
-    const isLoading = form.formState.isSubmitting//inbuild form functionality
+    const isLoading = form.formState.isSubmitting
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
@@ -50,8 +51,7 @@ const page = () => {
 
             const userPrompt = await googleai.models.generateContent({
                 model: "gemini-2.0-flash",
-                contents: `You are a helpful assistant dont give to much line of words just to the point no sandbagging real talk. Please answer the following user prompt in a clean and organized way using bullet points if suitable. Ensure the output is well-formatted and doesn't include any markdown artifacts like stray asterisks or broken formatting.
-                Prompt: ${values.prompt}`,
+                contents: `you are a code generator. dont write to much just to the point talk and to the point code very accurate. who generate code for me : ${values.prompt}`,
             });
 
             //@ts-ignore
@@ -80,11 +80,12 @@ const page = () => {
             router.refresh()
         }
     }
+
     console.log(message)
     return (
         <div className='flex flex-col gap-4 px-8 py-2'>
             <Heading
-                title='Conversation'
+                title='code-generate'
                 description='test this most advance conversation Tool'
                 icon={MessageSquare}
                 iconColor={'text-violet-700'}
@@ -100,7 +101,7 @@ const page = () => {
                                         <Input
                                             className="font-semibold"
                                             disabled={isLoading}
-                                            placeholder='write here . . .'
+                                            placeholder='put your code here . . .'
                                             {...field}
                                         />
                                     </FormControl>
@@ -133,12 +134,17 @@ const page = () => {
                             {
                                 elem.role === 'user' ?
                                     <div className='text-white font-semibold w-full'>
-                                        <h1 className='w-sm rounded p-2 drop-shadow-amber-950 border bg-black'>{elem.content}</h1>
+                                        <h1 className='max-w-[50%] rounded p-2 drop-shadow-amber-950 border bg-black'>{elem.content}</h1>
 
                                     </div> :
                                     <div className='text-white flex justify-end font-semibold w-full'>
-                                        <h1 className=' w-sm rounded p-2 drop-shadow-amber-950 border bg-black'>{elem.content}</h1>
-                                    </div>}
+                                        🤖 <h1 className='lg:max-w-[50%] w-full rounded p-2 bg-black/80 text-white backdrop-blur-2xl border '>
+                                            <ReactMarkdown>
+                                                {elem.content}
+                                            </ReactMarkdown>
+                                        </h1>
+                                    </div>
+                            }
                         </div>
                     ))
                 }
