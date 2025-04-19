@@ -5,31 +5,32 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Empty from '@/components/Empty'
-import { Code2Icon, Divide, Loader2, MessageSquare } from 'lucide-react'
+import { ImageIcon, Loader2, MessageSquare } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
-import { formSchema } from './constent'
+import { amountOption, formSchema } from './constent'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GoogleGenAI } from '@google/genai'
 import axios from 'axios'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 
 const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
 
 const page = () => {
     const router = useRouter()
-    const [message, setMessage] = useState<any[]>([])
-
+    const [images, setImages] = useState<any[]>([])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            prompt: ''
+            prompt: '',
+            amount: "1",
+            resolution: "512*512"
         }
     })
 
@@ -47,31 +48,31 @@ const page = () => {
                 content: values.prompt
             }
 
-            setMessage((prev): any => [...prev, userMessage])
+            setImages([])
 
             const userPrompt = await googleai.models.generateContent({
                 model: "gemini-2.0-flash",
-                contents: `you are a code generator. dont write to much just to the point talk and to the point code very accurate. who generate code for me : ${values.prompt}`,
+                contents: `Generate a detailed image description based on the following prompt.
+                Include visual details like composition, colors, lighting, style, and subject matter.
+                Make the description specific enough for an image generation AI to create a clear visual.
+                Prompt: ${values.prompt}`,
             });
 
             //@ts-ignore
             const aiResMessage = userPrompt.candidates[0].content.parts[0].text
 
-            const res = await axios.post('/api/conversation', {
-                message: aiResMessage
+            const res = await axios.post('/api/image', {
+                values
             })
 
-            const jsonString = res.data
-                .replace(/^```json\n/, '')
-                .replace(/\n```$/, '')
-                .replace(/\*{1,2}/g, '');
+            const url = res.data.map((elem: { url: string }) => elem.url)
 
             const aiMessage = {
                 role: "ai",
-                content: jsonString
+                content: url
             }
 
-            setMessage((prev): any => [...prev, aiMessage])
+            setImages((prev): any => [...prev, aiMessage])
 
             form.reset()
         } catch (err) {
@@ -81,13 +82,13 @@ const page = () => {
         }
     }
 
-    console.log(message)
+    console.log(images)
     return (
         <div className='flex flex-col gap-4 px-8 py-2'>
             <Heading
-                title='code-generate'
+                title='Image-generate'
                 description='test this most advance conversation Tool'
-                icon={Code2Icon}
+                icon={ImageIcon}
                 iconColor={'text-violet-700'}
                 bgColor={'bg-violet-200'}
             />
@@ -101,10 +102,28 @@ const page = () => {
                                         <Input
                                             className="font-semibold"
                                             disabled={isLoading}
-                                            placeholder='put your code here . . .'
+                                            placeholder='what would you like to generate . . .'
                                             {...field}
                                         />
                                     </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='amount'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Select>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue defaultValue={field.value} />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {amountOption}
+                                        </SelectContent>
+                                    </Select>
                                 </FormItem>
                             )}
                         />
@@ -123,13 +142,13 @@ const page = () => {
 
             <div>
                 {isLoading && <div> <Loader2 className='animate-spin' /> thinking . . .</div>}
-                {message.length === 0 && !isLoading && (
+                {images.length === 0 && !isLoading && (
                     <div>
                         <Empty />
                     </div>
                 )}
                 {
-                    message.map((elem) => (
+                    images.map((elem) => (
                         <div className='w-full'>
                             {
                                 elem.role === 'user' ?
@@ -139,22 +158,7 @@ const page = () => {
                                     </div> :
                                     <div className='text-white flex justify-end font-semibold w-full'>
                                         🤖 <h1 className='lg:max-w-[50%] w-full rounded p-2 bg-black/50 text-white backdrop-blur-2xl border '>
-                                            
-                                            <ReactMarkdown // this is new
-                                                components={{
-                                                    pre: ({ node, ...props }) => (
-                                                        <div className='overflow-auto w-full my-2 bg-black'>
-                                                            <pre {...props} />
-                                                        </div>
-                                                    ),
-                                                    code: ({ node, ...props }) => (
-                                                        <code className='rounded-lg p-1 bg-black/10' {...props} />
-                                                    )
-                                                }}
-                                            >
-                                                {elem.content}
-                                            </ReactMarkdown>
-                                            
+                                            {elem.content}
                                         </h1>
                                     </div>
                             }
