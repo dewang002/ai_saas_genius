@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Empty from '@/components/Empty'
-import { Loader2, MessageSquare } from 'lucide-react'
+import { Divide, Loader2, MessageSquare } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constent'
@@ -138,10 +138,23 @@ const page = () => {
 
                                     </div> :
                                     <div className='text-white flex justify-end font-semibold w-full'>
-                                        🤖 <h1 className='lg:max-w-[50%] w-full rounded p-2 bg-black/80 text-white backdrop-blur-2xl border '>
-                                            <ReactMarkdown>
+                                        🤖 <h1 className='lg:max-w-[50%] w-full rounded p-2 bg-black/50 text-white backdrop-blur-2xl border '>
+                                            
+                                            <ReactMarkdown // this is new
+                                                components={{
+                                                    pre: ({ node, ...props }) => (
+                                                        <div className='overflow-auto w-full my-2 bg-black'>
+                                                            <pre {...props} />
+                                                        </div>
+                                                    ),
+                                                    code: ({ node, ...props }) => (
+                                                        <code className='rounded-lg p-1 bg-black/10' {...props} />
+                                                    )
+                                                }}
+                                            >
                                                 {elem.content}
                                             </ReactMarkdown>
+                                            
                                         </h1>
                                     </div>
                             }
