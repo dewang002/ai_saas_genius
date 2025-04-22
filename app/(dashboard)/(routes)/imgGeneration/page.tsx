@@ -8,7 +8,7 @@ import Empty from '@/components/Empty'
 import { ImageIcon, Loader2 } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
-import { amountOption, formSchema } from './constent'
+import { amountOption, formSchema, resolutionOption } from './constent'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GoogleGenAI } from '@google/genai'
 import axios from 'axios'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 
 const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
@@ -38,6 +38,7 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            console.log(values)
             if (!googleai || !googleai.models) {
                 console.error("Google AI client or models not available");
                 return;
@@ -92,12 +93,12 @@ const page = () => {
                 iconColor={'text-violet-700'}
                 bgColor={'bg-violet-200'}
             />
-            <div className='w-full'>
+            <div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className='grid grid-cols-12 gap-2 w-full'>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='grid grid-cols-12 gap-1 w-full'>
                         <FormField name='prompt'
                             render={({ field }) => (
-                                <FormItem className='col-span-12 lg:col-span-10'>
+                                <FormItem className='col-span-12 lg:col-span-6'>
                                     <FormControl>
                                         <Input
                                             className="font-semibold"
@@ -113,8 +114,13 @@ const page = () => {
                             control={form.control}
                             name='amount'
                             render={({ field }) => (
-                                <FormItem>
-                                    <Select>
+                                <FormItem className='col-span-6 lg:col-span-2'>
+                                    <Select
+                                        disabled={isLoading}
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue defaultValue={field.value} />
@@ -122,9 +128,42 @@ const page = () => {
                                         </FormControl>
                                         <SelectContent>
                                             {amountOption.map(elem => (
-                                                <div>
+                                                <SelectItem
+                                                    key={elem.value}
+                                                    value={elem.value}
+                                                >
                                                     {elem.label}
-                                                </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='resolution'
+                            render={({ field }) => (
+                                <FormItem className='col-span-6 lg:col-span-2'>
+                                    <Select
+                                        disabled={isLoading}
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue defaultValue={field.value} />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {resolutionOption.map(elem => (
+                                                <SelectItem
+                                                    key={elem.value}
+                                                    value={elem.value}
+                                                >
+                                                    {elem.label}
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>

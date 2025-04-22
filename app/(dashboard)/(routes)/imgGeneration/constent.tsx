@@ -33,15 +33,15 @@ export const amountOption = [
 
 export const resolutionOption = [
     {
-        value: "256*256",
-        label: "256*256"
+        value: "256 * 256",
+        label: "256 * 256"
     },
     {
-        value: "512*512",
-        label: "512*512"
+        value: "512 * 512",
+        label: "512 * 512"
     },
     {
-        value: "1024*1024",
-        label: "1024*1024"
+        value: "1024 * 1024",
+        label: "1024 * 1024"
     },
 ]
