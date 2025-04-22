@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Empty from '@/components/Empty'
-import { ImageIcon, Loader2, MessageSquare } from 'lucide-react'
+import { ImageIcon, Loader2 } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { amountOption, formSchema } from './constent'
@@ -121,7 +121,11 @@ const page = () => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {amountOption}
+                                            {amountOption.map(elem => (
+                                                <div>
+                                                    {elem.label}
+                                                </div>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
