@@ -1,6 +1,8 @@
 import { auth } from "@clerk/nextjs/server"
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Modality } from "@google/genai";
 import { NextResponse } from "next/server"
+import * as fs from "node:fs";
+
 
 const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
 
@@ -22,12 +24,26 @@ const POST = async (req: Request) => {
         if (!resolution) {
             return new NextResponse('resolution required', { status: 500 })
         }
-        const res = await googleai.models.generateImages({
-            prompt,
-            n: parseInt(amount, 10), // here I have to check for google studio
-            size: resolution
-        });
-    } catch {
-
+        const response = await googleai.models.generateContent({
+            model: "gemini-2.0-flash-exp-image-generation",
+            contents: prompt,
+            config: {
+              responseModalities: [Modality.TEXT, Modality.IMAGE],
+            },
+          });
+          //@ts-ignore
+          for (const part of response.candidates[0].content.parts) {
+            if (part.text) {
+              console.log(part.text);
+            } else if (part.inlineData) {
+              const imageData = part.inlineData.data;
+              //@ts-ignore
+              const buffer = Buffer.from(imageData, "base64");
+              fs.writeFileSync("gemini-native-image.png", buffer);
+              console.log("Image saved as gemini-native-image.png");
+            }
+        }
+    } catch(err) {
+        console.log(err, "[Image creation err`]")
     }
 }

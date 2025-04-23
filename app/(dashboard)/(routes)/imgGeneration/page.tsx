@@ -8,7 +8,7 @@ import Empty from '@/components/Empty'
 import { ImageIcon, Loader2 } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
-import { amountOption, formSchema, resolutionOption } from './constent'
+import { formSchema  } from './constent'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -98,7 +98,7 @@ const page = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className='grid grid-cols-12 gap-1 w-full'>
                         <FormField name='prompt'
                             render={({ field }) => (
-                                <FormItem className='col-span-12 lg:col-span-6'>
+                                <FormItem className='col-span-12 lg:col-span-10'>
                                     <FormControl>
                                         <Input
                                             className="font-semibold"
@@ -110,66 +110,7 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name='amount'
-                            render={({ field }) => (
-                                <FormItem className='col-span-6 lg:col-span-2'>
-                                    <Select
-                                        disabled={isLoading}
-                                        onValueChange={field.onChange}
-                                        value={field.value}
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {amountOption.map(elem => (
-                                                <SelectItem
-                                                    key={elem.value}
-                                                    value={elem.value}
-                                                >
-                                                    {elem.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name='resolution'
-                            render={({ field }) => (
-                                <FormItem className='col-span-6 lg:col-span-2'>
-                                    <Select
-                                        disabled={isLoading}
-                                        onValueChange={field.onChange}
-                                        value={field.value}
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue defaultValue={field.value} />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {resolutionOption.map(elem => (
-                                                <SelectItem
-                                                    key={elem.value}
-                                                    value={elem.value}
-                                                >
-                                                    {elem.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                        
                         <div className='col-span-12 lg:col-span-2'>
                             <Button
                                 type='submit'
