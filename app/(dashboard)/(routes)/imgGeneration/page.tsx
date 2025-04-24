@@ -8,15 +8,15 @@ import Empty from '@/components/Empty'
 import { ImageIcon, Loader2 } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
-import { formSchema  } from './constent'
+import { formSchema } from './constent'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { GoogleGenAI } from '@google/genai'
 import axios from 'axios'
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { GoogleGenAI, Modality } from "@google/genai";
+import * as fs from "fs"
 
 
 const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
@@ -29,8 +29,6 @@ const page = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             prompt: '',
-            amount: "1",
-            resolution: "512*512"
         }
     })
 
@@ -39,33 +37,23 @@ const page = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             console.log(values)
-            if (!googleai || !googleai.models) {
-                console.error("Google AI client or models not available");
-                return;
-            }
+            setImages([])
 
             const userMessage = {
                 role: 'user',
                 content: values.prompt
             }
 
-            setImages([])
-
-            const userPrompt = await googleai.models.generateContent({
-                model: "gemini-2.0-flash",
-                contents: `Generate a detailed image description based on the following prompt.
-                Include visual details like composition, colors, lighting, style, and subject matter.
-                Make the description specific enough for an image generation AI to create a clear visual.
-                Prompt: ${values.prompt}`,
-            });
-
-            //@ts-ignore
-            const aiResMessage = userPrompt.candidates[0].content.parts[0].text
-
-            const res = await axios.post('/api/image', {
-                values
+            const res = await axios.post('/api/generateImage', {
+                values: userMessage.content,
             })
 
+
+            //res not coming
+            console.log(res,"ddddddddddddddddddddddddddd")
+            
+            
+            
             const url = res.data.map((elem: { url: string }) => elem.url)
 
             const aiMessage = {
@@ -110,7 +98,63 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        
+                        {/* <div className='col-span-12 grid grid-cols-2 gap-2 my-2'>
+                            <FormField
+                                name='amount'
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem className='col-span-1'>
+                                        <Select
+                                            disabled={isLoading}
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue defaultValue={field.value} />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {amountOption.map((option) => (
+                                                    <SelectItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name='resolution'
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem className='col-span-1'>
+                                        <Select
+                                            disabled={isLoading}
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue defaultValue={field.value} />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {resolutionOption.map((option) => (
+                                                    <SelectItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )}
+                            />
+                        </div> */}
+
                         <div className='col-span-12 lg:col-span-2'>
                             <Button
                                 type='submit'
