@@ -1,51 +1,42 @@
-import { auth } from "@clerk/nextjs/server"
 import { GoogleGenAI, Modality } from "@google/genai";
-import { NextResponse } from "next/server"
-import * as fs from "node:fs"
+import { NextRequest } from "next/server";
 
-const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
+export async function POST(req:NextRequest) {
+    try {
+        const body = await req.json()
+        const {prompt} = await body
+        const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
 
-export const POST = async (req: Request) => {
-  try {
-    const { userId } = await auth() // coming from clerk
-    const body = await req.json()
-    const { values } = body
+        const contents = prompt;
 
-    if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 })
+        const response = await ai.models.generateContent({
+            model: "gemini-2.0-flash-exp-image-generation",
+            contents: contents,
+            config: {
+                responseModalities: [Modality.TEXT, Modality.IMAGE],
+            },
+        });
+
+        const result = { text: '', image: '' };
+
+        //@ts-ignore
+        for (const part of response.candidates[0].content.parts) {
+            if (part.text) {
+                result.text = part.text;
+            } else if (part.inlineData) {
+                //@ts-ignore
+                result.image = part.inlineData.data;
+            }
+        }
+
+        return new Response(JSON.stringify(result), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        });
     }
-
-    if (!values) {
-      return new NextResponse('Empty prompt', { status: 500 })
-    }
-
-    const contents =
-      "Hi, can you create a 3d rendered image of a pig " +
-      "with wings and a top hat flying over a happy " +
-      "futuristic scifi city with lots of greenery?" + values;
-
-    const response = await googleai.models.generateContent({
-      model: "gemini-2.0-flash-exp-image-generation",
-      contents: contents,
-      config: {
-        responseModalities: [Modality.TEXT, Modality.IMAGE],
-      },
-    });
-    // @ts-ignore
-    for (const part of response.candidates[0].content.parts) {
-      if (part.text) {
-        console.log(part.text);
-      } else if (part.inlineData) {
-        const imageData = part.inlineData.data;
-        // @ts-ignore
-        const buffer = Buffer.from(imageData, "base64");
-        fs.writeFileSync("gemini-native-image.png", buffer);
-        console.log("Image saved as gemini-native-image.png");
-      }
-    }
-    return NextResponse.json(response, { status: 200 })
-  } catch (err) {
-    console.log("[IMAGE_ERROR]", err);
-    return new NextResponse("Internal Error", { status: 500 });
-  }
 }
