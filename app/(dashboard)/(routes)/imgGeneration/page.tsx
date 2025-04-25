@@ -44,6 +44,7 @@ const page = () => {
             }
         } catch (error) {
             console.error('Error:', error);
+            //@ts-ignore
             alert('Generation failed: ' + error.message);
         } finally {
             setLoading(false);
