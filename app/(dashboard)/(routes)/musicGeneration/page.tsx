@@ -4,7 +4,7 @@ import Heading from '@/components/Heading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Loader2, MessageSquare } from 'lucide-react'
+import { Loader2, Music2 } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constent'
@@ -67,11 +67,11 @@ const page = () => {
     return (
         <div className='flex flex-col gap-4 px-8 py-2'>
             <Heading
-                title='Conversation'
+                title='Music Generation'
                 description='test this most advance conversation Tool'
-                icon={MessageSquare}
-                iconColor={'text-violet-700'}
-                bgColor={'bg-violet-200'}
+                icon={Music2}
+                iconColor={'text-green-700'}
+                bgColor={'bg-green-200'}
             />
             <div className='w-full'>
                 <Form {...form}>
@@ -83,7 +83,7 @@ const page = () => {
                                         <Input
                                             className="font-semibold"
                                             disabled={isLoading}
-                                            placeholder='write here . . .'
+                                            placeholder='create you music with prompt . . .'
                                             {...field}
                                         />
                                     </FormControl>
