@@ -4,7 +4,7 @@ import Heading from '@/components/Heading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Divide, Loader, Loader2, MessageSquare } from 'lucide-react'
+import { Loader2, MessageSquare } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constent'
@@ -13,12 +13,9 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { GoogleGenAI } from '@google/genai'
+import { useState } from 'react'
 import axios from 'axios'
 import Empty from '@/components/Empty'
-
-const googleai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_AI_KEY });
 
 const page = () => {
     const router = useRouter()
@@ -36,11 +33,6 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            if (!googleai || !googleai.models) {
-                console.error("Google AI client or models not available");
-                return;
-            }
-
             const userMessage = {
                 role: 'user',
                 content: values.prompt
@@ -48,17 +40,8 @@ const page = () => {
 
             setMessage((prev): any => [...prev, userMessage])
 
-            const userPrompt = await googleai.models.generateContent({
-                model: "gemini-2.0-flash",
-                contents: `You are a helpful assistant dont give to much line of words just to the point no sandbagging real talk. Please answer the following user prompt in a clean and organized way using bullet points if suitable. Ensure the output is well-formatted and doesn't include any markdown artifacts like stray asterisks or broken formatting.
-                Prompt: ${values.prompt}`,
-            });
-
-            //@ts-ignore
-            const aiResMessage = userPrompt.candidates[0].content.parts[0].text
-
             const res = await axios.post('/api/conversation', {
-                message: aiResMessage
+                message: userMessage.content
             })
 
             const jsonString = res.data
@@ -133,11 +116,11 @@ const page = () => {
                             {
                                 elem.role === 'user' ?
                                     <div className='text-white font-semibold w-full'>
-                                        <h1 className='w-sm rounded p-2 drop-shadow-amber-950 border bg-black'>{elem.content}</h1>
+                                        <h1 className='w-sm rounded p-2 border bg-black/50'>{elem.content}</h1>
 
                                     </div> :
                                     <div className='text-white flex justify-end font-semibold w-full'>
-                                        <h1 className=' w-sm rounded p-2 drop-shadow-amber-950 border bg-black'>{elem.content}</h1>
+                                        <h1 className=' w-sm rounded p-2 border bg-black/50'>{elem.content}</h1>
                                     </div>}
                         </div>
                     ))
