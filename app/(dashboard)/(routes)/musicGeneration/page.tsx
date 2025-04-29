@@ -19,8 +19,7 @@ import Empty from '@/components/Empty'
 
 const page = () => {
     const router = useRouter()
-    const [music, setMusic] = useState<any[]>([])
-
+    const [music, setMusic] = useState<any>()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -33,37 +32,24 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const userMessage = {
-                role: 'user',
-                content: values.prompt
-            }
+            setMusic(undefined);
 
-            setMusic((prev): any => [...prev, userMessage])
+            const response = await axios.post('/api/music', {
+                prompt: values.prompt
+            });
 
-            const res = await axios.post('/api/conversation', {
-                message: userMessage.content
-            })
+            setMusic(response.data.audio); // Adjust based on actual response structure
 
-            const jsonString = res.data
-                .replace(/^```json\n/, '')
-                .replace(/\n```$/, '')
-                .replace(/\*{1,2}/g, '');
-
-            const aiMessage = {
-                role: "ai",
-                content: jsonString
-            }
-
-            setMusic((prev): any => [...prev, aiMessage])
-
-            form.reset()
+            form.reset();
         } catch (err) {
-            console.log("[formError]", err)
+            console.error("[Music Generation Error]", err);
         } finally {
-            router.refresh()
+            router.refresh();
         }
     }
+
     console.log(music)
+
     return (
         <div className='flex flex-col gap-4 px-8 py-2'>
             <Heading
@@ -105,25 +91,17 @@ const page = () => {
 
             <div>
                 {isLoading && <div> <Loader2 className='animate-spin' /> thinking . . .</div>}
-                {music.length === 0 && !isLoading && (
+                {!music && !isLoading && (
                     <div>
                         <Empty />
                     </div>
                 )}
                 {
-                    music.map((elem) => (
-                        <div className='w-full'>
-                            {
-                                elem.role === 'user' ?
-                                    <div className='text-white font-semibold w-full'>
-                                        <h1 className='w-sm rounded p-2 border bg-black/50'>{elem.content}</h1>
-
-                                    </div> :
-                                    <div className='text-white flex justify-end font-semibold w-full'>
-                                        <h1 className=' w-sm rounded p-2 border bg-black/50'>{elem.content}</h1>
-                                    </div>}
-                        </div>
-                    ))
+                    music && (
+                        <audio controls className='w-full mt-8'>
+                            <source src={music} />
+                        </audio>
+                    )
                 }
             </div>
 
