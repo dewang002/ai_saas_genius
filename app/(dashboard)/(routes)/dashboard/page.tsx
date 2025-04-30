@@ -19,20 +19,6 @@ const tools = [
     bg: 'bg-pink-200',
   },
   {
-    title: "Video Creation",
-    icon: VideoIcon,
-    href: "/videoGeneration",
-    color: 'text-orange-700',
-    bg: 'bg-orange-200',
-  },
-  {
-    title: "Music Generation",
-    icon: Music,
-    href: "/musicGeneration",
-    color: 'text-emerald-600',
-    bg: 'bg-emerald-200',
-  },
-  {
     title: "Code Generation",
     icon: Code,
     href: "/codeGeneration",

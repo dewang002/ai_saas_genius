@@ -27,18 +27,6 @@ const routes = [
         color: 'text-pink-700'
     },
     {
-        label: "Video Generation",
-        icon: VideoIcon,
-        href: "/video-generation",
-        color: 'text-orange-700'
-    },
-    {
-        label: "Music Generation",
-        icon: Music,
-        href: "/musicGeneration",
-        color: 'text-emerald-500'
-    },
-    {
         label: "Code Generation",
         icon: Code,
         href: "/code",
