@@ -34,7 +34,7 @@ const page = () => {
         try {
             setMusic(undefined);
 
-            const response = await axios.post('/api/music', {
+            const response = await axios.post('/api/musicGeneration', {
                 prompt: values.prompt
             });
 
@@ -90,7 +90,7 @@ const page = () => {
             </div>
 
             <div>
-                {isLoading && <div> <Loader2 className='animate-spin' /> thinking . . .</div>}
+                {isLoading && <div> <Loader2 className='animate-spin' /> thinking . . . </div>}
                 {!music && !isLoading && (
                     <div>
                         <Empty />

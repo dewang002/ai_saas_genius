@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Replicate from 'replicate'
 
 const replicate = new Replicate({
-    auth:process.env.REPLICA_KEY
+    auth: process.env.REPLICA_KEY
 });
 
 
@@ -30,14 +30,11 @@ export async function POST(req: NextRequest) {
             });
 
         // Return the audio data in a structured way
-        return NextResponse.json({ 
-            audio: response // or process the response to extract audio URL/data
-        });
-        
+        return NextResponse.json( response );
     } catch (error) {
         console.error("[Replicate Error]", error);
-        return new NextResponse(JSON.stringify({ 
-            error: "Failed to generate music" 
+        return new NextResponse(JSON.stringify({
+            error: "Failed to generate music"
         }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
