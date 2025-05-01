@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button'
 const page = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
     const [prompt, setPrompt] = useState('')
@@ -22,7 +21,6 @@ const page = () => {
     const handleGenerate = async () => {
         try {
             setLoading(true);
-            setResult(null)
             setImagePreview(null);
 
             const response = await axios.post('/api/generateImage', {
@@ -34,7 +32,6 @@ const page = () => {
             }
 
             const data = await response.data;
-            setResult(data);
 
             // If there's an image, create download link
             if (data.image) {
@@ -49,6 +46,7 @@ const page = () => {
         } finally {
             setLoading(false);
             setPrompt('')
+            router.refresh()
         }
     };
     const handleDownload = () => {
@@ -72,7 +70,7 @@ const page = () => {
                 bgColor={'bg-violet-200'}
             />
             <div className="container">
-                <input placeholder='create a dog image . . .' type="text" value={prompt} className='border p-1 w-full' onChange={(e) => setPrompt(e.target.value)} />
+                <input placeholder='create a dog image . . .' type="text" value={prompt} className='rounded border p-1 sm:w-xl w-full' onChange={(e) => setPrompt(e.target.value)} />
                 <Button
                     onClick={handleGenerate}
                     disabled={loading}
@@ -82,24 +80,21 @@ const page = () => {
                 </Button>
 
                 {imagePreview && (
-                   <div className='mt-4'>
-                   <img 
-                       src={imagePreview} 
-                       alt="Generated content" 
-                       className='h-100 rounded-lg shadow-lg min:w-100 object-cover mx-auto'
-                   />
-                   <Button 
-                       onClick={() => {
-                           const link = document.createElement('a');
-                           link.href = imagePreview;
-                           link.download = 'generated-image.png';
-                           link.click();
-                       }}
-                       className='mt-4'
-                   >
-                       Download Image
-                   </Button>
-               </div>
+                    <div className='mt-4'>
+                        <img
+                            src={imagePreview}
+                            alt="Generated content"
+                            className='h-100 rounded-lg shadow-lg min:w-100 object-cover mx-auto'
+                        />
+                        <Button
+                            onClick={() => {
+                                handleDownload
+                            }}
+                            className='mt-4'
+                        >
+                            Download Image
+                        </Button>
+                    </div>
                 )}
             </div>
 

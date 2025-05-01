@@ -15,11 +15,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { GoogleGenAI } from '@google/genai'
 import axios from 'axios'
 
 
-const googleai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
 
 const page = () => {
     const router = useRouter()
@@ -37,11 +35,6 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            if (!googleai || !googleai.models) {
-                console.error("Google AI client or models not available");
-                return;
-            }
-
             const userMessage = {
                 role: 'user',
                 content: values.prompt
@@ -49,18 +42,11 @@ const page = () => {
 
             setMessage((prev): any => [...prev, userMessage])
 
-            const userPrompt = await googleai.models.generateContent({
-                model: "gemini-2.0-flash",
-                contents: `you are a code generator. dont write to much just to the point talk and to the point code very accurate. who generate code for me : ${values.prompt}`,
-            });
-
-            //@ts-ignore
-            const aiResMessage = userPrompt.candidates[0].content.parts[0].text
-
+            
             const res = await axios.post('/api/conversation', {
-                message: aiResMessage
+                message: userMessage.content
             })
-
+            
             const jsonString = res.data
                 .replace(/^```json\n/, '')
                 .replace(/\n```$/, '')
