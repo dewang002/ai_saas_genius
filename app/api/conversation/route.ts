@@ -1,8 +1,9 @@
 'use server'
+
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
-
+import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit";
 const googleai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
 
 export const POST = async (req: Request) => {
@@ -18,6 +19,12 @@ export const POST = async (req: Request) => {
         if (!message) {
             return new NextResponse("Message are required", { status: 500 })
         }
+
+        const freeTrial = await checkApiLimit()
+        if (!freeTrial) {
+            return new NextResponse("free trial is ended, to continue check out or plan", { status: 500 })
+        }
+        
         const userPrompt = await googleai.models.generateContent({
             model: "gemini-2.0-flash",
             contents: `You are a helpful assistant dont give to much line of words just to the point no sandbagging real talk. Please answer the following user prompt in a clean and organized way using bullet points if suitable. Ensure the output is well-formatted and doesn't include any markdown artifacts like stray asterisks or broken formatting.

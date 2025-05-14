@@ -117,7 +117,6 @@ const page = () => {
                                 elem.role === 'user' ?
                                     <div className='text-white font-semibold w-full'>
                                         <h1 className='w-sm rounded p-2 border bg-black/50'>{elem.content}</h1>
-
                                     </div> :
                                     <div className='text-white flex justify-end font-semibold w-full'>
                                         <h1 className=' w-sm rounded p-2 border bg-black/50'>{elem.content}</h1>
