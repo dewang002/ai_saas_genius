@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import axios from 'axios'
 import { Button } from '@/components/ui/button'
+import { useProModel } from '@/hooks/useProModel'
 
 
 
@@ -15,8 +16,10 @@ const page = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
-
     const [prompt, setPrompt] = useState('')
+
+    const proModel = useProModel()
+
 
     const handleGenerate = async () => {
         try {
@@ -39,10 +42,10 @@ const page = () => {
                 //@ts-ignore
                 setImagePreview(previewUrl);
             }
-        } catch (error) {
-            console.error('Error:', error);
-            //@ts-ignore
-            alert('Generation failed: ' + error.message);
+        } catch (error:any) {
+            if(error?.response?.status === 403){
+                proModel.onOpen()
+            }
         } finally {
             setLoading(false);
             setPrompt('')

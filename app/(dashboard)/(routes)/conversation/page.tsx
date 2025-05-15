@@ -16,11 +16,13 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import axios from 'axios'
 import Empty from '@/components/Empty'
+import ProModel from '@/components/ProModel'
+import { useProModel } from '@/hooks/useProModel'
 
 const page = () => {
     const router = useRouter()
     const [message, setMessage] = useState<any[]>([])
-
+    const proModel = useProModel()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -57,7 +59,10 @@ const page = () => {
             setMessage((prev): any => [...prev, aiMessage])
 
             form.reset()
-        } catch (err) {
+        } catch (err:any) {
+            if(err?.response?.status === 403){
+                proModel.onOpen()
+            }
             console.log("[formError]", err)
         } finally {
             router.refresh()

@@ -5,7 +5,7 @@ import SideBar from "@/components/SideBar"
 import { Button } from "./ui/button"
 import { useEffect, useState } from "react"
 
-const MobileSidebar = () => {
+const MobileSidebar = ({count}:{count:number}) => {
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
@@ -23,7 +23,7 @@ const MobileSidebar = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
-        <SideBar />
+        <SideBar count={count} />
       </SheetContent>
     </Sheet>
   )
