@@ -19,10 +19,9 @@ export const POST = async (req: Request) => {
         if (!message) {
             return new NextResponse("Message are required", { status: 500 })
         }
-
         const freeTrial = await checkApiLimit()
         if (!freeTrial) {
-            return new NextResponse("free trial is ended, to continue check out or plan", { status: 500 })
+            return new NextResponse("free trial is ended, to continue check out or plan", { status: 403 })
         }
         
         const userPrompt = await googleai.models.generateContent({
@@ -33,7 +32,7 @@ export const POST = async (req: Request) => {
 
         //@ts-ignore
         const aiResMessage = userPrompt.candidates[0].content.parts[0].text
-
+        await increaseApiLimit()
         return NextResponse.json(aiResMessage, { status: 200 })
 
     } catch (err) {

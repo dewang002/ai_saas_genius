@@ -1,4 +1,5 @@
 'use server'
+import { checkApiLimit } from "@/lib/api-limit";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
@@ -17,6 +18,11 @@ export const POST = async (req: Request) => {
 
         if (!message) {
             return new NextResponse("Message are required", { status: 500 })
+        }
+
+        const freeTrial = await checkApiLimit()
+        if(!freeTrial){
+            return new NextResponse("your free trial is ended, to continue check out our plan.")
         }
 
         const response = await googleai.models.generateContent({

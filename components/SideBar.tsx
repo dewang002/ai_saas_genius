@@ -4,6 +4,8 @@ import { Montserrat } from 'next/font/google';
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
+import { getApiCount } from '@/lib/api-limit';
+import FreeCounter from './FreeCounter';
 
 const montserrat = Montserrat({ weight: "600", subsets: ['latin'] });
 
@@ -40,7 +42,11 @@ const routes = [
     },
 ]
 
-const SideBar = () => {
+interface remainingCount {
+    count: number;
+}
+
+const SideBar = ({ count = 0 }: remainingCount) => {
     const pathName = usePathname()
     return (
         <div className={`${montserrat.className} p-4 sidebar flex gap-16 h-full flex-col md:inset-y-0 md:fixed md:w-72 bg-zinc-900`}>
@@ -52,15 +58,21 @@ const SideBar = () => {
                     Gin
                 </h1>
             </Link>
-            <div className='flex flex-col gap-8'>
-                {routes.map(elem => (
-                    <Link key={elem.label} className={`flex gap-4 ${pathName === elem.href ? 'bg-zinc-600 text-white p-2 rounded' : ' '} `} href={elem.href}>
-                        <elem.icon className={`h-6 w-6 ${elem.color}`} />
-                        <h1 className='text-white'>{elem.label}</h1>
-                    </Link>
-                ))}
+            <div className='flex flex-col justify-between h-full'>
+
+                <div className='flex flex-col gap-8 justify-between '>
+                    {routes.map(elem => (
+                        <Link key={elem.label} className={`flex gap-4 ${pathName === elem.href ? 'bg-zinc-600 text-white p-2 rounded' : ' '} `} href={elem.href}>
+                            <elem.icon className={`h-6 w-6 ${elem.color}`} />
+                            <h1 className='text-white'>{elem.label}</h1>
+                        </Link>
+                    ))}
+                </div>
+                <FreeCounter count={count} />
+
             </div>
         </div>
+
     )
 }
 
