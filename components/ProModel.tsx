@@ -1,7 +1,7 @@
 "use client"
 
-import React from 'react'
-import { Check, Code, ImageIcon, MessageSquare, Zap, ZapIcon } from 'lucide-react'
+import React, { useState } from 'react'
+import { Check, Code, ImageIcon, LucideClockFading, MessageSquare, Zap, ZapIcon, ZapOffIcon } from 'lucide-react'
 
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
@@ -9,6 +9,7 @@ import { useProModel } from '@/hooks/useProModel'
 import { Badge } from './ui/badge'
 import { Card } from './ui/card'
 import { Button } from './ui/button'
+import axios from 'axios'
 
 const tool = [
     {
@@ -31,6 +32,19 @@ const tool = [
 
 const ProModel = () => {
     const proModel = useProModel();
+    const [loading, setLoading] = useState(false)
+
+    const subscription = async () => {
+        try {
+            setLoading(true)
+            const response = await axios.get('/api/stripe');
+            window.location.href = await response.data.url;
+        } catch (error) {
+            console.log(error, "STRIPE_CLIENT_ERROR")
+        } finally {
+            setLoading(false)
+        }
+    }
     return (
         <Dialog open={proModel.isOpen} onOpenChange={proModel.onClose}>
             <DialogContent>
@@ -62,8 +76,8 @@ const ProModel = () => {
 
                     </DialogDescription>
                     <DialogFooter>
-                        <Button className='w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
-                            Upgrade {<Zap />}
+                        <Button onClick={subscription}  className='w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
+                           {loading? <LucideClockFading  /> : `Upgrade`} 
                         </Button>
                     </DialogFooter>
                 </DialogHeader>
