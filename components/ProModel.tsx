@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
-import { Check, Code, ImageIcon, LucideClockFading, MessageSquare, Zap, ZapIcon, ZapOffIcon } from 'lucide-react'
+import { Check, Code, ImageIcon, LucideClockFading, MessageSquare } from 'lucide-react'
 
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'

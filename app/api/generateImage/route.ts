@@ -1,4 +1,5 @@
 import { checkApiLimit, increaseApiLimit } from "@/lib/api-limit";
+import { checkSubscripton } from "@/lib/subscription";
 import { GoogleGenAI, Modality } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,6 +7,7 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
         const { prompt } = await body
+        const isPro = await checkSubscripton()
         const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
 
         const contents = prompt;
@@ -21,7 +23,7 @@ export async function POST(req: NextRequest) {
         const result = { text: '', image: '' };
 
         const freeTrial = await checkApiLimit()
-        if (!freeTrial) {
+        if (!freeTrial&&!isPro) {
             return new NextResponse("free trial is ended, to continue check out or plan", { status: 403 })
         }
 
@@ -35,7 +37,9 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        await increaseApiLimit()
+        if(!isPro){
+            await increaseApiLimit()
+        }
 
         return new Response(JSON.stringify(result), {
             status: 200,

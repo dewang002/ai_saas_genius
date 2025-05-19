@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import axios from 'axios'
 import Empty from '@/components/Empty'
-import ProModel from '@/components/ProModel'
 import { useProModel } from '@/hooks/useProModel'
 
 const page = () => {
@@ -68,7 +67,6 @@ const page = () => {
             router.refresh()
         }
     }
-    console.log(message)
     return (
         <div className='flex flex-col gap-4 px-8 py-2'>
             <Heading

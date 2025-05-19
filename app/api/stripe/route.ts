@@ -8,7 +8,9 @@ const settingUrl = absoluteUrl("/settings")
 
 export async function GET(req: NextRequest) {
     try {
-        const { userId } = await auth();
+        const Id = await auth();
+        const userId = Id?.userId;
+        console.log(userId)
         const user = await currentUser();
 
         if (!user || !userId) {
@@ -30,13 +32,19 @@ export async function GET(req: NextRequest) {
             return new NextResponse(JSON.stringify({ url: stripeSession.url }))
         }
 
+        const userEmail = user.emailAddresses[0].emailAddress;
+        if (!userEmail) {
+            return new NextResponse("User email not found", { status: 400 });
+        }
+
+
         const stripeSession = await stripe.checkout.sessions.create({
             success_url: settingUrl,
             cancel_url: settingUrl,
             payment_method_types: ["card"],
             mode: "subscription",
             billing_address_collection: "auto",
-            customer_email: user.emailAddresses[0].emailAddress,
+            customer_email: userEmail,
             line_items: [
                 {
                     price_data: {
@@ -54,7 +62,7 @@ export async function GET(req: NextRequest) {
                 }
             ],
             metadata: {
-                userId
+                userId,
             }
         })
 

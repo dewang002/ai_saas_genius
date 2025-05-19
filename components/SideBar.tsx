@@ -4,7 +4,6 @@ import { Montserrat } from 'next/font/google';
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
-import { getApiCount } from '@/lib/api-limit';
 import FreeCounter from './FreeCounter';
 
 const montserrat = Montserrat({ weight: "600", subsets: ['latin'] });
@@ -37,16 +36,17 @@ const routes = [
     {
         label: "Setting",
         icon: Settings,
-        href: "/setting",
+        href: "/settings",
         color: 'text-white'
     },
 ]
 
 interface remainingCount {
     count: number;
+    isPro: boolean;
 }
 
-const SideBar = ({ count = 0 }: remainingCount) => {
+const SideBar = ({ count = 0, isPro = false }: remainingCount) => {
     const pathName = usePathname()
     return (
         <div className={`${montserrat.className} p-4 sidebar flex gap-16 h-full flex-col md:inset-y-0 md:fixed md:w-72 bg-zinc-900`}>
@@ -68,11 +68,9 @@ const SideBar = ({ count = 0 }: remainingCount) => {
                         </Link>
                     ))}
                 </div>
-                <FreeCounter count={count} />
-
+                <FreeCounter isPro={isPro} count={count} />
             </div>
         </div>
-
     )
 }
 

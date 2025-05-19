@@ -1,5 +1,6 @@
 'use server'
-import { checkApiLimit } from "@/lib/api-limit";
+import { checkApiLimit, increaseApiLimit } from "@/lib/api-limit";
+import { checkSubscripton } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
@@ -11,6 +12,7 @@ export const POST = async (req: Request) => {
         const { userId } = await auth() // coming form clerk
         const body = await req.json()
         const { message } = body
+        const isPro = await checkSubscripton()
 
         if (!userId) {
             return new NextResponse("unAuthenticated", { status: 401 })
@@ -21,7 +23,7 @@ export const POST = async (req: Request) => {
         }
 
         const freeTrial = await checkApiLimit()
-        if(!freeTrial){
+        if (!freeTrial && isPro) {
             return new NextResponse("your free trial is ended, to continue check out our plan.")
         }
 
@@ -32,7 +34,9 @@ export const POST = async (req: Request) => {
 
         //@ts-ignore
         const aiResMessage = response.candidates[0].content.parts[0].text
-
+        if(!isPro){
+            await increaseApiLimit()
+        }
         return NextResponse.json(aiResMessage, { status: 200 })
 
     } catch (err) {

@@ -4,6 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit";
+import { checkSubscripton } from "@/lib/subscription";
 const googleai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
 
 export const POST = async (req: Request) => {
@@ -16,14 +17,16 @@ export const POST = async (req: Request) => {
         if (!userId) {
             return new NextResponse("unAuthenticated", { status: 401 })
         }
-
         if (!message) {
             return new NextResponse("Message are required", { status: 500 })
         }
         const freeTrial = await checkApiLimit()
-        if (!freeTrial) {
+        const isPro = await checkSubscripton()
+        if (!freeTrial && !isPro) {
             return new NextResponse("free trial is ended, to continue check out or plan", { status: 403 })
         }
+
+
         
         const userPrompt = await googleai.models.generateContent({
             model: "gemini-2.0-flash",
@@ -33,7 +36,9 @@ export const POST = async (req: Request) => {
 
         //@ts-ignore
         const aiResMessage = userPrompt.candidates[0].content.parts[0].text
-        await increaseApiLimit()
+        if(!isPro){
+            await increaseApiLimit()
+        }
         return NextResponse.json(aiResMessage , { status: 200 })
 
     } catch (err) {
