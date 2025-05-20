@@ -17,6 +17,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import Empty from '@/components/Empty'
 import { useProModel } from '@/hooks/useProModel'
+import toast from 'react-hot-toast'
 
 const page = () => {
     const router = useRouter()
@@ -61,8 +62,9 @@ const page = () => {
         } catch (err:any) {
             if(err?.response?.status === 403){
                 proModel.onOpen()
+            }else{
+                toast.error('something went wrong')
             }
-            console.log("[formError]", err)
         } finally {
             router.refresh()
         }

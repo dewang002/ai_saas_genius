@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ModalProvider from "@/components/ModelProvider"
+import Toaster_Provider from "@/components/Toaster_Provider";
+import CrispProvider from "@/components/CrispProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +29,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <CrispProvider />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
             <ModalProvider />
+            <Toaster_Provider />
           {children}
         </body>
       </html>

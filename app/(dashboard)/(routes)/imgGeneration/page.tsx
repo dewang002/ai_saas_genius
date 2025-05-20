@@ -9,6 +9,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { useProModel } from '@/hooks/useProModel'
+import toast from 'react-hot-toast'
 
 
 
@@ -45,6 +46,8 @@ const page = () => {
         } catch (error:any) {
             if(error?.response?.status === 403){
                 proModel.onOpen()
+            }else{
+                toast.error('something went wrong')
             }
         } finally {
             setLoading(false);

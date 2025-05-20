@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import axios from 'axios'
 import { useProModel } from '@/hooks/useProModel'
+import toast from 'react-hot-toast'
 
 
 
@@ -64,6 +65,8 @@ const page = () => {
         } catch (err:any) {
             if(err?.response?.status === 403){
                 proModel.onOpen()
+            }else{
+                toast.error('something went wrong')
             }
         } finally {
             router.refresh()
