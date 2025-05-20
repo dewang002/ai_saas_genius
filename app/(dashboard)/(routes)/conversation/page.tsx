@@ -19,9 +19,14 @@ import Empty from '@/components/Empty'
 import { useProModel } from '@/hooks/useProModel'
 import toast from 'react-hot-toast'
 
-const page = () => {
+interface Message {
+    role: 'user' | 'ai';
+    content: string;
+  }
+
+const Convopage = () => {
     const router = useRouter()
-    const [message, setMessage] = useState<any[]>([])
+    const [message, setMessage] = useState<Message[]>([])
     const proModel = useProModel()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -117,7 +122,7 @@ const page = () => {
                 )}
                 {
                     message.map((elem) => (
-                        <div className='w-full'>
+                        <div key={elem.content} className='w-full'>
                             {
                                 elem.role === 'user' ?
                                     <div className='text-white font-semibold w-full'>
@@ -135,4 +140,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Convopage

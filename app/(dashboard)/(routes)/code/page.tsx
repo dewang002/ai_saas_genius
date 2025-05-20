@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Empty from '@/components/Empty'
-import { Code2Icon, Divide, Loader2, MessageSquare } from 'lucide-react'
+import { Code2Icon,  Loader2 } from 'lucide-react'
 
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constent'
@@ -19,11 +19,14 @@ import axios from 'axios'
 import { useProModel } from '@/hooks/useProModel'
 import toast from 'react-hot-toast'
 
+interface Message {
+    role: string
+    content: string
+  }
 
-
-const page = () => {
+const Codepage = () => {
     const router = useRouter()
-    const [message, setMessage] = useState<any[]>([])
+    const [message, setMessage] = useState<Message[]>([])
     const proModel = useProModel()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -122,7 +125,7 @@ const page = () => {
                 )}
                 {
                     message.map((elem) => (
-                        <div className='w-full'>
+                        <div key={elem.content} className='w-full'>
                             {
                                 elem.role === 'user' ?
                                     <div className='text-white font-semibold w-full'>
@@ -134,12 +137,12 @@ const page = () => {
                                             
                                             <ReactMarkdown // this is new
                                                 components={{
-                                                    pre: ({ node, ...props }) => (
+                                                    pre: ({ ...props }) => (
                                                         <div className='overflow-auto w-full my-2 bg-black'>
                                                             <pre {...props} />
                                                         </div>
                                                     ),
-                                                    code: ({ node, ...props }) => (
+                                                    code: ({ ...props }) => (
                                                         <code className='rounded-lg p-1 bg-black/10' {...props} />
                                                     )
                                                 }}
@@ -159,4 +162,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Codepage

@@ -4,7 +4,7 @@ import { checkApiLimit } from '@/lib/api-limit'
 import { Settings } from 'lucide-react'
 import React from 'react'
 
-const page = async () => {
+const Settingpage = async () => {
   const isPro = await checkApiLimit()
   return (
     <div>
@@ -25,4 +25,4 @@ const page = async () => {
   )
 }
 
-export default page
+export default Settingpage

@@ -1,5 +1,5 @@
 "use client"
-import { ArrowRight, Code, ImageIcon, MessageSquare, Music, VideoIcon } from 'lucide-react'
+import { ArrowRight, Code, ImageIcon, MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -39,7 +39,7 @@ const Dashboard = () => {
         {
           tools.map(elem => (
             <div onClick={()=>router.push(elem.href)} className='shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400 flex hover:cursor-pointer w-80 md:w-sm px-4 py-2 rounded-md border items-center justify-between'>
-              <div className='flex items-center gap-4 '>
+              <div key={elem.title} className='flex items-center gap-4 '>
                 <elem.icon className={`${elem.color} ${elem.bg} p-1 rounded`} />
                 <p className='font-semibold'>{elem.title}</p>
               </div>

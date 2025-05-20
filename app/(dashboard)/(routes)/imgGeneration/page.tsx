@@ -13,7 +13,7 @@ import toast from 'react-hot-toast'
 
 
 
-const page = () => {
+const Imgpage = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
@@ -108,4 +108,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Imgpage
