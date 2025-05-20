@@ -35,7 +35,9 @@ export default function LandingPage() {
               Sign In
             </Link>
             <Button >
-              <Link href="#pricing">Get Started</Link>
+              <Link href="/sign-up">
+                Sign Up
+              </Link>
             </Button>
           </div>
         </div>
@@ -212,45 +214,19 @@ export default function LandingPage() {
                   Join thousands of satisfied customers and transform how your team works today.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto" asChild>
-                  <Link href="#pricing">Start Your Free Trial</Link>
-                </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
-                  <Link href="#">Schedule a Demo</Link>
-                </Button>
-              </div>
-              <p className="text-xs sm:text-sm text-muted-foreground">No credit card required. 14-day free trial.</p>
             </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t bg-background">
+      <footer className="w-full border-t bg-background px-4">
         <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
           <div className="flex items-center gap-2">
             <Zap className="h-6 w-6 text-primary" />
             <span className="text-lg font-bold">StreamLine</span>
           </div>
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-6 md:px-0">
-            <nav className="flex flex-wrap justify-center gap-4 md:gap-6">
-              <Link href="#" className="text-xs sm:text-sm font-medium hover:underline underline-offset-4">
-                About
-              </Link>
-              <Link href="#" className="text-xs sm:text-sm font-medium hover:underline underline-offset-4">
-                Features
-              </Link>
-              <Link href="#" className="text-xs sm:text-sm font-medium hover:underline underline-offset-4">
-                Pricing
-              </Link>
-              <Link href="#" className="text-xs sm:text-sm font-medium hover:underline underline-offset-4">
-                Blog
-              </Link>
-              <Link href="#" className="text-xs sm:text-sm font-medium hover:underline underline-offset-4">
-                Contact
-              </Link>
-            </nav>
             <div className="flex items-center gap-4">
               <Link href="#" className="text-muted-foreground hover:text-foreground">
                 <Twitter className="h-4 w-4" />
