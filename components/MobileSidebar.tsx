@@ -4,8 +4,9 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import SideBar from "@/components/SideBar"
 import { Button } from "./ui/button"
 import { useEffect, useState } from "react"
+import { checkSubscripton } from "@/lib/subscription"
 
-const MobileSidebar = ({count}:{count:number}) => {
+const MobileSidebar = ({count, isPro}:{count:number, isPro:boolean}) => {
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
@@ -23,7 +24,7 @@ const MobileSidebar = ({count}:{count:number}) => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
-        <SideBar count={count} />
+        <SideBar isPro={isPro} count={count} />
       </SheetContent>
     </Sheet>
   )
