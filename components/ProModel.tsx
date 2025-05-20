@@ -76,7 +76,7 @@ const ProModel = () => {
 
                     </DialogDescription>
                     <DialogFooter>
-                        <Button onClick={subscription}  className='w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
+                        <Button asChild onClick={subscription}  className='w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
                            {loading? <LucideClockFading  /> : `Upgrade`} 
                         </Button>
                     </DialogFooter>

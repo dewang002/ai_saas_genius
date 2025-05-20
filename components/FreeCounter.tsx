@@ -1,3 +1,5 @@
+"use client"
+
 import { MAX_FREE_COUNT } from '@/Constant'
 import React from 'react'
 import { Progress } from './ui/progress'
