@@ -6,7 +6,7 @@ import { absoluteUrl } from "@/lib/utils";
 
 const settingUrl = absoluteUrl("/settings")
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const Id = await auth();
         const userId = Id?.userId;

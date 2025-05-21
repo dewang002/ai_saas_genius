@@ -27,12 +27,10 @@ export async function POST(req: NextRequest) {
             return new NextResponse("free trial is ended, to continue check out or plan", { status: 403 })
         }
 
-        //@ts-ignore
         for (const part of response.candidates[0].content.parts) {
             if (part.text) {
                 result.text = part.text;
             } else if (part.inlineData) {
-                //@ts-ignore
                 result.image = part.inlineData.data;
             }
         }
@@ -46,7 +44,6 @@ export async function POST(req: NextRequest) {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        //@ts-ignore
         return new Response(JSON.stringify({ error: error.message }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },

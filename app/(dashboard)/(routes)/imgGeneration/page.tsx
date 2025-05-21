@@ -10,6 +10,7 @@ import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { useProModel } from '@/hooks/useProModel'
 import toast from 'react-hot-toast'
+import Image from 'next/image'
 
 
 
@@ -87,10 +88,12 @@ const Imgpage = () => {
 
                 {imagePreview && (
                     <div className='mt-4'>
-                        <img
+                        <Image
+                        height={100}
+                        width={800}
                             src={imagePreview}
                             alt="Generated content"
-                            className='h-100 rounded-lg shadow-lg min:w-100 object-cover mx-auto'
+                            className='rounded-lg shadow-lg min:w-100 object-cover mx-auto'
                         />
                         <Button
                             onClick={() => {

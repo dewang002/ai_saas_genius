@@ -1,6 +1,5 @@
 import { UserButton } from "@clerk/nextjs"
 import MobileSidebar from "./MobileSidebar"
-import FreeCounter from "./FreeCounter"
 import { getApiCount } from "@/lib/api-limit"
 import { checkSubscripton } from "@/lib/subscription"
 

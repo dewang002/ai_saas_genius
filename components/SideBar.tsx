@@ -1,12 +1,13 @@
 "use client"
 
 
-import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from 'lucide-react'
+import { Code, ImageIcon, LayoutDashboard, MessageSquare, Settings } from 'lucide-react'
 import { Montserrat } from 'next/font/google';
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import FreeCounter from './FreeCounter';
+import Image from 'next/image';
 
 const montserrat = Montserrat({ weight: "600", subsets: ['latin'] });
 
@@ -52,9 +53,9 @@ const SideBar = ({ count = 0, isPro = false }: remainingCount) => {
     const pathName = usePathname()
     return (
         <div className={`${montserrat.className} p-4 sidebar flex gap-16 h-full flex-col md:inset-y-0 md:fixed md:w-72 bg-zinc-900`}>
-            <Link className='flex gap-4' href={'/dashboard'}>
+            <Link className='flex items-center gap-4' href={'/dashboard'}>
                 <div className='h-10 object-contain'>
-                    <img className='object-contain h-10' src='/logo.png' alt='logo' />
+                    <Image width={40} height={40} className='object-contain' src='/logo.png' alt='logo' />
                 </div>
                 <h1 className='text-lg font-bold text-white'>
                     Gin

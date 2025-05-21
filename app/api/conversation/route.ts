@@ -34,7 +34,6 @@ export const POST = async (req: Request) => {
             Prompt: ${message}`,
         });
 
-        //@ts-ignore
         const aiResMessage = userPrompt.candidates[0].content.parts[0].text
         if(!isPro){
             await increaseApiLimit()
