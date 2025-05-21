@@ -38,8 +38,8 @@ const Dashboard = () => {
       <div className='flex flex-col items-center justify-center gap-4'>
         {
           tools.map(elem => (
-            <div onClick={()=>router.push(elem.href)} className='shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400 flex hover:cursor-pointer w-80 md:w-sm px-4 py-2 rounded-md border items-center justify-between'>
-              <div key={elem.title} className='flex items-center gap-4 '>
+            <div key={elem.title} onClick={()=>router.push(elem.href)} className='shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400 flex hover:cursor-pointer w-80 md:w-sm px-4 py-2 rounded-md border items-center justify-between'>
+              <div className='flex items-center gap-4 '>
                 <elem.icon className={`${elem.color} ${elem.bg} p-1 rounded`} />
                 <p className='font-semibold'>{elem.title}</p>
               </div>

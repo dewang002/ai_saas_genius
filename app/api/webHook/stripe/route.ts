@@ -1,9 +1,10 @@
 import Stripe from "stripe";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
 import { stripe } from "@/lib/stripe";
+
+
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -18,9 +19,11 @@ export async function POST(req: Request) {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         )
-    } catch (error: any) {
-        return new NextResponse(`webhook error : ${error.message}`, { status: 400 })
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return new NextResponse(`webhook error : ${errorMessage}`, { status: 400 });
     }
+    
 
 
     const session = event.data.object as Stripe.Checkout.Session;
@@ -41,12 +44,11 @@ export async function POST(req: Request) {
                     stripeCustomerId: subscription.customer as string,
                     stripePriceId: subscription.items.data[0].price.id,
                     stripeCurrentPeriodEnd: new Date(
-                        // @ts-ignore
                         subscription.current_period_end * 1000
                     ),
                 },
             })
-        } catch (err: any) {
+        } catch{
             return new NextResponse("Internal error during session completion", { status: 500 });
         }
     }
@@ -64,12 +66,11 @@ export async function POST(req: Request) {
             data: {
                 stripePriceId: subscription.items.data[0].price.id,
                 stripeCurrentPeriodEnd: new Date(
-                    // @ts-ignore
                     subscription.current_period_end * 1000
                 ),
             },
         })
-    } catch(err:any){
+    } catch{
         return new NextResponse("Internal error during invoice update",{status: 500});
     }
     }

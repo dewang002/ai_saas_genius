@@ -27,10 +27,17 @@ export async function POST(req: NextRequest) {
             return new NextResponse("free trial is ended, to continue check out or plan", { status: 403 })
         }
 
+        if (
+            !response.candidates ||
+            !response.candidates[0]?.content?.parts
+          ) {
+            return new Response("Invalid response from AI", { status: 500 });
+          }
+
         for (const part of response.candidates[0].content.parts) {
             if (part.text) {
                 result.text = part.text;
-            } else if (part.inlineData) {
+            } else if (part.inlineData?.data) {
                 result.image = part.inlineData.data;
             }
         }
@@ -44,9 +51,15 @@ export async function POST(req: NextRequest) {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
+        let errorMessage = 'Something went wrong';
+
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+      
+        return new Response(JSON.stringify({ error: errorMessage }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
         });
     }
 }

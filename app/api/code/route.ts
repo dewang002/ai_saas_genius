@@ -32,7 +32,8 @@ export const POST = async (req: Request) => {
             contents: `you are a code generator. dont write to much just to the point talk and to the point code very accurate. who generate code for me : ${message}`,
         });
 
-        const aiResMessage = response.candidates[0].content.parts[0].text 
+        const aiResMessage = response.candidates?.[0]?.content?.parts?.[0]?.text ?? "No response generated.";
+
         if(!isPro){
             await increaseApiLimit()
         }

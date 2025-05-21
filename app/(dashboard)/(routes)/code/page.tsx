@@ -19,6 +19,8 @@ import axios from 'axios'
 import { useProModel } from '@/hooks/useProModel'
 import toast from 'react-hot-toast'
 
+import { AxiosError } from "axios";
+
 interface Message {
     role: string
     content: string
@@ -45,7 +47,7 @@ const Codepage = () => {
                 content: values.prompt
             }
 
-            setMessage((prev): any => [...prev, userMessage])
+            setMessage((prev) => [...prev, userMessage])
 
             
             const res = await axios.post('/api/conversation', {
@@ -62,15 +64,21 @@ const Codepage = () => {
                 content: jsonString
             }
 
-            setMessage((prev): any => [...prev, aiMessage])
+            setMessage((prev) => [...prev, aiMessage])
 
             form.reset()
-        } catch (err:any) {
-            if(err?.response?.status === 403){
-                proModel.onOpen()
-            }else{
-                toast.error('something went wrong')
-            }
+        } catch (err) {
+            if (typeof err === "object" && err !== null && "response" in err) {
+                const axiosError = err as AxiosError;
+            
+                if (axiosError.response?.status === 403) {
+                  proModel.onOpen();
+                } else {
+                  toast.error('something went wrong');
+                }
+              } else {
+                toast.error('unexpected error');
+              }
         } finally {
             router.refresh()
         }

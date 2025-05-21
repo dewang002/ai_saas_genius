@@ -139,7 +139,7 @@ export default function LandingPage() {
                   Simple, Transparent Pricing
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground text-sm sm:text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Choose the plan that's right for you and your team.
+                  Choose the plan that is right for you and your team.
                 </p>
               </div>
             </div>

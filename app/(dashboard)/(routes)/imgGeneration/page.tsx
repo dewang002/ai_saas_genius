@@ -6,7 +6,7 @@ import { ImageIcon } from 'lucide-react'
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { useProModel } from '@/hooks/useProModel'
 import toast from 'react-hot-toast'
@@ -17,7 +17,7 @@ import Image from 'next/image'
 const Imgpage = () => {
     const router = useRouter()
     const [loading, setLoading] = useState(false);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState('')
 
     const proModel = useProModel()
@@ -41,14 +41,14 @@ const Imgpage = () => {
             // If there's an image, create download link
             if (data.image) {
                 const previewUrl = `data:image/png;base64,${data.image}`;
-                //@ts-ignore
                 setImagePreview(previewUrl);
             }
-        } catch (error:any) {
-            if(error?.response?.status === 403){
-                proModel.onOpen()
-            }else{
-                toast.error('something went wrong')
+        } catch (error) {
+            const err = error as AxiosError;
+            if (err.response?.status === 403) {
+                proModel.onOpen();
+            } else {
+                toast.error('something went wrong');
             }
         } finally {
             setLoading(false);
@@ -89,16 +89,14 @@ const Imgpage = () => {
                 {imagePreview && (
                     <div className='mt-4'>
                         <Image
-                        height={100}
-                        width={800}
+                            height={100}
+                            width={800}
                             src={imagePreview}
                             alt="Generated content"
                             className='rounded-lg shadow-lg min:w-100 object-cover mx-auto'
                         />
                         <Button
-                            onClick={() => {
-                                handleDownload
-                            }}
+                            onClick={handleDownload}
                             className='mt-4'
                         >
                             Download Image

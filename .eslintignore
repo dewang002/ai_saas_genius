@@ -1,2 +1,2 @@
-lib/generated/**
-node_modules/**
+lib/generated/
+prisma/generated/

@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import Empty from '@/components/Empty'
 import { useProModel } from '@/hooks/useProModel'
 import toast from 'react-hot-toast'
@@ -22,7 +22,8 @@ import toast from 'react-hot-toast'
 interface Message {
     role: 'user' | 'ai';
     content: string;
-  }
+}
+
 
 const Convopage = () => {
     const router = useRouter()
@@ -40,12 +41,12 @@ const Convopage = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const userMessage = {
+            const userMessage:Message = {
                 role: 'user',
                 content: values.prompt
             }
 
-            setMessage((prev): any => [...prev, userMessage])
+            setMessage((prev) => [...prev, userMessage])
 
             const res = await axios.post('/api/conversation', {
                 message: userMessage.content
@@ -56,19 +57,25 @@ const Convopage = () => {
                 .replace(/\n```$/, '')
                 .replace(/\*{1,2}/g, '');
 
-            const aiMessage = {
+            const aiMessage:Message = {
                 role: "ai",
                 content: jsonString
             }
 
-            setMessage((prev): any => [...prev, aiMessage])
+            setMessage((prev) => [...prev, aiMessage])
 
             form.reset()
-        } catch (err:any) {
-            if(err?.response?.status === 403){
-                proModel.onOpen()
-            }else{
-                toast.error('something went wrong')
+        } catch (err) {
+            if (err && typeof err === 'object' && 'response' in err) {
+                const axiosError = err as AxiosError;
+        
+                if (axiosError.response?.status === 403) {
+                    proModel.onOpen();
+                } else {
+                    toast.error('something went wrong');
+                }
+            } else {
+                toast.error('unexpected error');
             }
         } finally {
             router.refresh()

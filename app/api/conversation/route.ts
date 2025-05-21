@@ -1,6 +1,6 @@
 'use server'
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit";
@@ -10,7 +10,6 @@ const googleai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
 export const POST = async (req: Request) => {
     try {
         const { userId } = await auth() // coming form clerk
-        const user = await currentUser()
         const body = await req.json()
         const { message } = body
 
@@ -34,7 +33,8 @@ export const POST = async (req: Request) => {
             Prompt: ${message}`,
         });
 
-        const aiResMessage = userPrompt.candidates[0].content.parts[0].text
+        const aiResMessage = userPrompt.candidates?.[0]?.content?.parts?.[0]?.text ?? "No AI response.";
+
         if(!isPro){
             await increaseApiLimit()
         }
