@@ -17,13 +17,15 @@ export async function GET() {
             return new NextResponse("UNAUTHRIZED", { status: 401 });
         }
 
+        if (!stripe) {
+            throw new NextResponse("stripe not initialized")
+        }
+
         const userSubscription = await prismadb.userSubscription.findUnique({
-            where: {
-                userId
-            }
+            where: { userId }
         })
 
-        if (userSubscription && userSubscription.stripeCustomerId) {
+        if (userSubscription && userSubscription?.stripeCustomerId) {
             const stripeSession = await stripe.billingPortal.sessions.create({
                 customer: userSubscription.stripeCustomerId,
                 return_url: settingUrl,
@@ -47,17 +49,7 @@ export async function GET() {
             customer_email: userEmail,
             line_items: [
                 {
-                    price_data: {
-                        currency: "USD",
-                        product_data: {
-                            name: "Genius Pro",
-                            description: "Unlimited AI Generations",
-                        },
-                        unit_amount: 2000,
-                        recurring: {
-                            interval: "month"
-                        }
-                    },
+                    price: process.env.STRIPE_PRICE_ID,
                     quantity: 1
                 }
             ],
